@@ -27,7 +27,20 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../client'));
 
 app.get('/', function(req, res, next){
-	res.render("index", {name:"bbb"});
+  var fs = require('fs');
+  var filePath = path.join(__dirname, '../client/index.json');
+  fs.exists(filePath, function(fileok){
+    if(fileok) {
+      fs.readFile(filePath, function(error, data) {
+        var jsonObj = JSON.parse(data);
+        console.log("jsonObject--->",jsonObj);
+        res.render("index",jsonObj);
+        //res.render("index", {name:"bbb"});
+      });
+    } else
+      console.log("file not found");
+  });
+
 })
 
 // Requests that get this far won't be handled
